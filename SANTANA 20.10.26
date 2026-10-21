@@ -1,0 +1,192 @@
+/* Programa criado em 22/set/2026 para a 1a
+ * aula de ORI sobre GRAFOS.
+ * Vamos implementar um grafo, usando listas
+ * de adjacência
+ * 1 : 2,5
+ * 2 : 1,3,4,5
+ * 3 : 2,4
+ * 4 : 2,3,5
+ * 5 : 1,2,4
+ * */
+
+#include <stdio.h>
+#include <malloc.h>
+
+#define QTD 5
+// constantes para representar cores
+#define WHITE 0
+#define GRAY 1
+#define BLACK 2
+// vetores de atributos dos vértices
+
+int cor[QTD+1];
+int dist[QTD+1];
+int pred[QTD+1];
+
+// FILA de controle de visitação de nós
+typdef struct {
+   int vertice ; 
+   struct Nofila * prox; //proximo	
+} Nofila;
+
+typedef Nofila * fila ;
+
+/*typedef struct {
+	    NoFila * ;
+} fila;
+*/
+
+void initFila ( fila * f ) {
+	*f = NULL;
+	
+	
+}
+
+void enqueue (Fila *f, int vertice) {
+	NoFila * nof = (Nofila *) malloc(sizeof(NoFila *))  ;
+	nof-> vertice = vertice;
+	nof->prox = NULL ;
+	if (*f == NULL) {
+		//estava vazia
+	}
+	else {
+		    NoFila * atual = *f ;
+		    while ( atual ->prox !=NULL) 
+		            atual = (Nofila *) atual->prox ;
+		            //ao sair do while atual sera o ultimo
+		            atual ->prox = (struct NoFila * ) nof ;
+		            
+	}
+}
+
+int dequeue (Fila * f) {
+	NoFila * primeiro = *f ;
+	if ( primeiro == NULL) { // estava vazia
+	      return -1 ;
+	}
+	else {
+		   int ret = primeiro->vertice;
+		   *f = (fila) (*f)-> prox ;
+		   free(primeiro) ;
+		   return ret ;
+		   
+	}
+}
+
+
+
+typedef struct {
+   int numero ;
+   struct NoLisViz * prox ;   // proximo
+} NoLisViz ;
+
+// elemento ZERO nao utilizado neste grafo
+typedef NoLisViz * grafo[QTD+1] ;
+
+void initGrafo( grafo g ) {
+  int i ;
+  for (i = 1; i <= QTD ; i++ )
+	  g[i] = NULL ;
+}
+
+// insere vizinho na posição onde do grafo g
+void insertViz ( grafo g, int onde, int viz ) {
+  NoLisViz * vizinho = (NoLisViz *) malloc(sizeof(NoLisViz))  ;
+  vizinho->numero = viz ;
+  vizinho->prox  = NULL ;
+  if ( g[onde] == NULL ) 
+     g[onde] = vizinho ;
+  else {
+	NoLisViz * ultimo = (NoLisViz *) g[onde] ;
+	while ( ultimo->prox != NULL )
+		ultimo = (NoLisViz *) ultimo->prox ;
+	ultimo->prox = (struct NoLisViz *) vizinho ;
+  }
+}
+
+ 
+
+void showGrafo ( grafo g) {
+  int i ;
+  for (i = 1; i <= QTD ; i++ ) {
+	printf("\nVértice %d : ", i) ;
+	NoLisViz * v = g[i] ;
+	while ( v != NULL )  {
+	   printf("\t %d", v->numero) ;
+	   v = (NoLisViz *) v->prox ;
+	}
+  }
+  printf("\n");
+  
+}
+
+void BFS(grafo  G, int s) {
+	int u;
+	for (u=0; u <= QTD; u ++)  { // posso colocar um if, para todo nó fazer um if
+		cor [u] = WHITE;
+		dist [u] = 9999; // representa infinito
+		pred [u] = -1;  // não tem predecesssor
+		
+		
+	}
+     	cor [s] = GRAY;
+		dist [s] = 0;
+		pred [s] = -1;  // não tem predecesssor
+		initFila(&Q) ;
+		enqueue(&Q,s)
+		While (Q != NULL) {
+			int u = dequeue(&Q) ;
+		//obtem o primeiro vizinho de u
+		NoLisViz * v = (NoLisViz * ) G[u]->prox ;
+		while (v != NULL) {
+			if (cor [v] == WHITE) {
+				 cor [v] = GRAY ;
+				 dist [v] = dist[u] + 1;
+				 pred[v] = u;
+				 emqueue(&Q,v) ;
+				 
+			}
+		}	
+		cor[u] = BLACK;
+	}
+		
+		
+}
+
+
+void mostraVetore() {
+    int i ;
+    
+            printf("\nCores : ")
+    for ( i=1; i <= QTD; i++)
+            printf("\t %d",cor [i]);
+            
+             printf("\nDistancias : ")
+    for ( i=1; i <= QTD; i++)
+            printf("\t %d",dist [i]);
+            
+            printf("\nPredecessores : ")
+    for ( i=1; i <= QTD; i++)
+            printf("\t %d",pred [i]);
+
+
+}
+void main() {
+   grafo jambalaya ;
+   initGrafo (jambalaya) ;
+   insertViz (jambalaya,1,2) ;
+   insertViz (jambalaya,1,5) ;
+   insertViz (jambalaya,2,1) ;
+   insertViz (jambalaya,2,3) ;
+   insertViz (jambalaya,2,4) ;
+   insertViz (jambalaya,2,5) ;
+   insertViz (jambalaya,3,2) ;
+   insertViz (jambalaya,3,4) ;
+   insertViz (jambalaya,4,2) ;
+   insertViz (jambalaya,4,3) ;
+   insertViz (jambalaya,4,5) ;
+   insertViz (jambalaya,5,1) ;
+   insertViz (jambalaya,5,2) ;
+   insertViz (jambalaya,5,4) ;
+   showGrafo (jambalaya) ;
+}
